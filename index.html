@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5" />
+  <meta name="theme-color" content="#07070d" />
+  <meta name="description" content="05Annotate — a premium party drawing & guessing game. Big screen plus phones. No app, no account." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>05Annotate — draw, guess, laugh</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="base.css" />
+  <link rel="stylesheet" href="home.css" />
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="bg__blob a"></div><div class="bg__blob b"></div><div class="bg__blob c"></div>
+  </div>
+  <canvas class="particles" id="particles" aria-hidden="true"></canvas>
+
+  <main class="home">
+    <header class="home__top rise">
+      <a class="wordmark home__logo" href="./" aria-label="05Annotate home">
+        <span class="o5">05</span><span>Annotate</span>
+      </a>
+      <button class="btn btn--ghost btn--icon" id="settingsBtn" aria-label="Settings" title="Settings">⚙︎</button>
+    </header>
+
+    <section class="hero">
+      <p class="eyebrow rise d1">Party drawing game · big screen + phones</p>
+      <h1 class="hero__title display rise d1">
+        Draw it.<br><span class="gradient-text">Guess it.</span> Rate it.
+      </h1>
+      <p class="hero__sub muted rise d2">
+        Open the main screen on a TV or laptop. Everyone joins from their phone with a
+        hand-drawn avatar. No app. No account. Up to 12 players.
+      </p>
+
+      <div class="hero__cta rise d3">
+        <a class="btn btn--primary btn--lg" href="main.html">
+          <span aria-hidden="true">📺</span> Open Main Screen
+        </a>
+        <a class="btn btn--lg" href="join.html">
+          <span aria-hidden="true">🎮</span> Join a Game
+        </a>
+      </div>
+
+      <p class="hero__hint faint rise d4">
+        Tip: one big screen runs the room. Players join at
+        <strong id="joinHost">this site</strong><span>/join</span>
+      </p>
+    </section>
+
+    <section class="home__cards">
+      <article class="card feature rise" style="--i:0">
+        <div class="feature__icon">🖌️</div>
+        <h3>Make your mark</h3>
+        <p class="muted">Draw a custom avatar, then sketch wild prompts on a smooth, zoomable canvas.</p>
+      </article>
+      <article class="card feature rise" style="--i:1">
+        <div class="feature__icon">⭐</div>
+        <h3>Guess &amp; rate</h3>
+        <p class="muted">Fuzzy guess-matching rewards near-misses. Star the masterpieces.</p>
+      </article>
+      <article class="card feature rise" style="--i:2">
+        <div class="feature__icon">🏆</div>
+        <h3>Take the podium</h3>
+        <p class="muted">Animated leaderboards, confetti, achievements and round history.</p>
+      </article>
+    </section>
+
+    <section class="card stats-peek" id="statsPeek" hidden>
+      <h3 class="stats-peek__title">Your stats</h3>
+      <div class="stats-grid" id="statsGrid"></div>
+      <div class="achv-row" id="achvRow"></div>
+    </section>
+
+    <footer class="home__foot faint">
+      <span>05Annotate · part of The05Company toolkit</span>
+      <button class="linklike" id="eggBtn" aria-label="?">·</button>
+    </footer>
+  </main>
+
+  <!-- Settings sheet -->
+  <div class="sheet-scrim" id="settingsScrim" hidden></div>
+  <aside class="sheet glass" id="settingsSheet" role="dialog" aria-modal="true" aria-label="Settings" hidden>
+    <div class="sheet__grab"></div>
+    <h2 class="sheet__title">Settings</h2>
+    <div class="sheet__row">
+      <span>Appearance</span>
+      <div class="seg" id="themeSeg" role="group" aria-label="Theme">
+        <button data-theme="dark" class="seg__btn">Dark</button>
+        <button data-theme="light" class="seg__btn">Light</button>
+      </div>
+    </div>
+    <label class="sheet__row"><span>Sound effects</span>
+      <span class="switch"><input type="checkbox" id="setSound"><span class="switch__track"><span class="switch__thumb"></span></span></span></label>
+    <label class="sheet__row"><span>Background music <small class="faint">(main screen)</small></span>
+      <span class="switch"><input type="checkbox" id="setMusic"><span class="switch__track"><span class="switch__thumb"></span></span></span></label>
+    <label class="sheet__row"><span>Haptics</span>
+      <span class="switch"><input type="checkbox" id="setHaptics"><span class="switch__track"><span class="switch__thumb"></span></span></span></label>
+    <label class="sheet__row"><span>Motion &amp; animation</span>
+      <span class="switch"><input type="checkbox" id="setMotion"><span class="switch__track"><span class="switch__thumb"></span></span></span></label>
+    <label class="sheet__row"><span>Performance mode <small class="faint">(less blur)</small></span>
+      <span class="switch"><input type="checkbox" id="setPerf"><span class="switch__track"><span class="switch__thumb"></span></span></span></label>
+    <button class="btn btn--ghost btn--block" id="resetData">Reset local stats</button>
+    <button class="btn btn--block" id="closeSettings">Done</button>
+  </aside>
+
+  <script src="util.js"></script>
+  <script src="store.js"></script>
+  <script src="audio.js"></script>
+  <script src="confetti.js"></script>
+  <script src="home.js"></script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#07070d" />
+  <title>05Annotate · Main Screen</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="base.css" />
+  <link rel="stylesheet" href="main.css" />
+</head>
+<body class="stage-body">
+  <div class="bg" aria-hidden="true">
+    <div class="bg__blob a"></div><div class="bg__blob b"></div><div class="bg__blob c"></div>
+  </div>
+  <canvas class="particles" id="particles" aria-hidden="true"></canvas>
+  <div class="stage-light" aria-hidden="true"></div>
+
+  <!-- top bar -->
+  <header class="stage-top">
+    <a class="wordmark" href="index.html" aria-label="Home"><span class="o5">05</span><span>Annotate</span></a>
+    <div class="stage-top__right">
+      <span class="chip" id="phaseChip">Setting up…</span>
+      <button class="btn btn--ghost btn--icon" id="musicToggle" aria-label="Toggle music" title="Background music">♪</button>
+      <button class="btn btn--ghost btn--icon" id="fsBtn" aria-label="Fullscreen" title="Fullscreen">⛶</button>
+    </div>
+  </header>
+
+  <main class="stage">
+
+    <!-- CONNECTING -->
+    <section class="screen active stage-center" id="scrConnecting">
+      <div class="connecting">
+        <div class="spinner-ring"></div>
+        <h2 class="display">Opening your room…</h2>
+        <p class="muted">Reserving a room code and warming up the canvas.</p>
+      </div>
+    </section>
+
+    <!-- LOBBY -->
+    <section class="screen stage-center" id="scrLobby">
+      <div class="lobby">
+        <div class="lobby__join card">
+          <p class="eyebrow">Join from any phone</p>
+          <div class="qr" id="qrBox" aria-label="QR code to join"></div>
+          <p class="lobby__url" id="joinUrl">—</p>
+          <div class="codebig" id="codeBig" aria-label="Room code">——————</div>
+          <p class="faint lobby__hint">Open the link, type the code, draw your face.</p>
+        </div>
+        <div class="lobby__people">
+          <div class="lobby__head">
+            <h2 class="display">Players <span class="muted" id="pcount">0/12</span></h2>
+            <span class="chip" id="hostWaiting">Waiting for host to start…</span>
+          </div>
+          <div class="roster" id="roster"></div>
+          <p class="faint lobby__empty" id="lobbyEmpty">No one yet — be the first to join and you’ll be host 👑</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- DRAW -->
+    <section class="screen stage-center" id="scrDraw">
+      <div class="drawphase">
+        <p class="eyebrow" id="drawRound">Round 1</p>
+        <h2 class="display drawphase__title">Pencils up — everyone’s drawing</h2>
+        <div class="timer-ring" id="drawTimer">
+          <svg viewBox="0 0 120 120"><circle class="tr-bg" cx="60" cy="60" r="54"/><circle class="tr-fg" cx="60" cy="60" r="54"/></svg>
+          <span class="timer-ring__label" id="drawTimerLabel">0:00</span>
+        </div>
+        <p class="drawphase__progress muted"><span id="drawDone">0</span> of <span id="drawTotal">0</span> done</p>
+        <div class="draw-avatars" id="drawAvatars"></div>
+      </div>
+    </section>
+
+    <!-- REVEAL / GUESS / RATE -->
+    <section class="screen stage-center" id="scrReveal">
+      <div class="reveal">
+        <div class="reveal__stage">
+          <div class="reveal__byline"><img id="revealAvatar" class="mini-avatar" alt=""><span id="revealName" class="muted">—</span></div>
+          <div class="reveal__frame" id="revealFrame">
+            <img id="revealImg" class="reveal__img" alt="Player drawing" />
+          </div>
+        </div>
+        <aside class="reveal__side">
+          <span class="chip reveal__status" id="revealStatus">Guess the prompt</span>
+          <div class="reveal__timer" id="revealTimerWrap"><div class="reveal__timer-bar" id="revealTimerBar"></div></div>
+          <div class="reveal__answer" id="revealAnswer" hidden>
+            <p class="eyebrow">The prompt was</p>
+            <h3 class="reveal__prompt display" id="revealPrompt">—</h3>
+            <div class="reveal__stars" id="revealStars"></div>
+          </div>
+          <div class="reveal__guesses" id="revealGuesses"></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- SCORES -->
+    <section class="screen stage-center" id="scrScores">
+      <div class="scores">
+        <h2 class="display scores__title" id="scoresTitle">Leaderboard</h2>
+        <div class="podium" id="podium"></div>
+        <div class="rankings" id="rankings"></div>
+        <p class="faint scores__hint" id="scoresHint">Waiting for host…</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- persistent room code -->
+  <div class="room-tag" id="roomTag" hidden><small>Room</small><span id="roomTagCode">——————</span></div>
+
+  <!-- libraries (loaded from CDN at runtime; site stays static) -->
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+  <script src="util.js"></script>
+  <script src="store.js"></script>
+  <script src="audio.js"></script>
+  <script src="confetti.js"></script>
+  <script src="prompts.js"></script>
+  <script src="matching.js"></script>
+  <script src="net.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

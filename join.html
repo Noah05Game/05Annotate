@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#07070d" />
+  <title>05Annotate · Join</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="base.css" />
+  <link rel="stylesheet" href="join.css" />
+</head>
+<body class="play-body">
+  <div class="bg" aria-hidden="true">
+    <div class="bg__blob a"></div><div class="bg__blob b"></div><div class="bg__blob c"></div>
+  </div>
+
+  <!-- connection status pill -->
+  <div class="netpill" id="netpill" hidden><span class="netpill__dot"></span><span id="netpillText">Connecting…</span></div>
+
+  <main class="play" id="play">
+
+    <!-- ================= SETUP: CODE ================= -->
+    <section class="screen active play-center" id="scrCode">
+      <div class="setup card rise">
+        <a class="wordmark wordmark--sm" href="index.html"><span class="o5">05</span><span>Annotate</span></a>
+        <h1 class="setup__title">Join a room</h1>
+        <p class="muted">Enter the 6-character code shown on the main screen.</p>
+        <input class="field field--code" id="codeInput" inputmode="latin" autocapitalize="characters"
+               autocomplete="off" spellcheck="false" maxlength="6" placeholder="ABC123" aria-label="Room code" />
+        <button class="btn btn--primary btn--lg btn--block" id="codeNext">Continue</button>
+        <p class="faint setup__foot">No app, no account. Just draw.</p>
+      </div>
+    </section>
+
+    <!-- ================= SETUP: NAME ================= -->
+    <section class="screen play-center" id="scrName">
+      <div class="setup card rise">
+        <button class="btn btn--ghost btn--back" id="nameBack" aria-label="Back">←</button>
+        <h1 class="setup__title">Your name</h1>
+        <p class="muted">This is how you’ll show up to everyone.</p>
+        <input class="field" id="nameInput" maxlength="16" autocomplete="off" placeholder="e.g. Noah" aria-label="Display name" />
+        <button class="btn btn--primary btn--lg btn--block" id="nameNext">Continue</button>
+      </div>
+    </section>
+
+    <!-- ================= SETUP: AVATAR ================= -->
+    <section class="screen play-center" id="scrAvatar">
+      <div class="setup setup--wide card rise">
+        <button class="btn btn--ghost btn--back" id="avatarBack" aria-label="Back">←</button>
+        <h1 class="setup__title">Draw your face</h1>
+        <p class="muted">This is your avatar for the whole game.</p>
+        <div id="avatarMount"></div>
+        <button class="btn btn--primary btn--lg btn--block" id="avatarConfirm">Join the room</button>
+      </div>
+    </section>
+
+    <!-- ================= CONNECTING ================= -->
+    <section class="screen play-center" id="scrConnecting">
+      <div class="mid">
+        <div class="spinner-ring"></div>
+        <h2 class="display" id="connTitle">Joining…</h2>
+        <p class="muted" id="connNote">Finding your room.</p>
+      </div>
+    </section>
+
+    <!-- ================= LOBBY / WAITING ROOM ================= -->
+    <section class="screen play-center" id="scrLobby">
+      <div class="lobbyP">
+        <div class="lobbyP__me card">
+          <img id="meAvatar" class="lobbyP__av" alt="" />
+          <div>
+            <p class="eyebrow" id="meRole">You’re in</p>
+            <h2 class="lobbyP__name" id="meName">—</h2>
+          </div>
+          <label class="switch lobbyP__ready">
+            <input type="checkbox" id="readyToggle" />
+            <span class="switch__track"><span class="switch__thumb"></span></span>
+            <span>Ready</span>
+          </label>
+        </div>
+
+        <div class="lobbyP__list" id="lobbyList"></div>
+
+        <!-- host control panel -->
+        <div class="hostpanel card" id="hostPanel" hidden>
+          <div class="hostpanel__head"><span class="crown">👑</span><h3>Host controls</h3></div>
+          <div class="hostpanel__rows">
+            <div class="ctl">
+              <label>Game mode</label>
+              <div class="seg" id="ctlMode" role="group" aria-label="Game mode">
+                <button class="seg__btn on" data-v="classic">Classic</button>
+                <button class="seg__btn" data-v="blank" disabled title="Coming soon">Fill the Blank · soon</button>
+              </div>
+            </div>
+            <div class="ctl">
+              <label>Drawing timer</label>
+              <div class="seg" id="ctlTimer" role="group" aria-label="Timer">
+                <button class="seg__btn" data-v="30">30s</button>
+                <button class="seg__btn" data-v="60">60s</button>
+                <button class="seg__btn on" data-v="90">90s</button>
+                <button class="seg__btn" data-v="120">2m</button>
+                <button class="seg__btn" data-v="300">5m</button>
+              </div>
+            </div>
+            <div class="ctl">
+              <label>Rounds</label>
+              <div class="seg" id="ctlRounds" role="group" aria-label="Rounds">
+                <button class="seg__btn" data-v="1">1</button>
+                <button class="seg__btn" data-v="2">2</button>
+                <button class="seg__btn on" data-v="3">3</button>
+                <button class="seg__btn" data-v="5">5</button>
+              </div>
+            </div>
+            <div class="ctl ctl--row">
+              <label for="ctlRatings">Star ratings</label>
+              <label class="switch">
+                <input type="checkbox" id="ctlRatings" checked />
+                <span class="switch__track"><span class="switch__thumb"></span></span>
+              </label>
+            </div>
+            <div class="ctl ctl--row">
+              <label for="ctlAudience">Audience mode</label>
+              <label class="switch">
+                <input type="checkbox" id="ctlAudience" />
+                <span class="switch__track"><span class="switch__thumb"></span></span>
+              </label>
+            </div>
+          </div>
+          <button class="btn btn--primary btn--lg btn--block" id="startBtn">Start game</button>
+        </div>
+
+        <p class="faint lobbyP__hint" id="lobbyHint">Waiting for the host to start…</p>
+      </div>
+    </section>
+
+    <!-- ================= DRAW ================= -->
+    <section class="screen" id="scrDraw">
+      <div class="drawP">
+        <div class="drawP__top">
+          <p class="eyebrow">Your prompt</p>
+          <h2 class="drawP__prompt" id="myPrompt">—</h2>
+          <span class="drawP__timer chip" id="myDrawTimer">0:00</span>
+        </div>
+        <div id="drawMount" class="drawP__pad"></div>
+        <button class="btn btn--primary btn--lg btn--block" id="submitDraw">Submit drawing</button>
+      </div>
+    </section>
+
+    <!-- ================= GUESS ================= -->
+    <section class="screen play-center" id="scrGuess">
+      <div class="guessP">
+        <p class="eyebrow" id="guessFor">Guess <span></span>’s drawing</p>
+        <div class="guessP__img"><img id="guessImg" alt="Drawing to guess" /></div>
+        <span class="chip guessP__timer" id="guessTimer">0:00</span>
+        <input class="field" id="guessInput" maxlength="60" autocomplete="off" placeholder="What is it?" aria-label="Your guess" />
+        <button class="btn btn--primary btn--lg btn--block" id="guessSend">Lock in guess</button>
+      </div>
+    </section>
+
+    <!-- ================= RATE ================= -->
+    <section class="screen play-center" id="scrRate">
+      <div class="rateP">
+        <p class="eyebrow" id="rateFor">Rate <span></span>’s drawing</p>
+        <div class="stars" id="starRow" role="group" aria-label="Rating">
+          <button class="star" data-v="1" aria-label="1 star">★</button>
+          <button class="star" data-v="2" aria-label="2 stars">★</button>
+          <button class="star" data-v="3" aria-label="3 stars">★</button>
+          <button class="star" data-v="4" aria-label="4 stars">★</button>
+          <button class="star" data-v="5" aria-label="5 stars">★</button>
+        </div>
+        <p class="faint" id="rateHint">Tap to rate</p>
+      </div>
+    </section>
+
+    <!-- ================= WAIT / RESULT ================= -->
+    <section class="screen play-center" id="scrWait">
+      <div class="mid">
+        <div class="pulse-dot"></div>
+        <h2 class="display" id="waitTitle">Nice!</h2>
+        <p class="muted" id="waitNote">Waiting for everyone else…</p>
+        <div class="result-badge" id="resultBadge" hidden></div>
+      </div>
+    </section>
+
+    <!-- ================= SCORES ================= -->
+    <section class="screen play-center" id="scrScoresP">
+      <div class="scoresP">
+        <h2 class="display" id="scoresPTitle">Leaderboard</h2>
+        <div class="scoresP__list" id="scoresPList"></div>
+        <!-- host buttons -->
+        <div class="scoresP__host" id="scoresPHost" hidden>
+          <button class="btn btn--primary btn--block" id="nextRoundBtn">Next round</button>
+          <button class="btn btn--ghost btn--block" id="endGameBtn">End game</button>
+        </div>
+        <div class="scoresP__host" id="scoresPAgain" hidden>
+          <button class="btn btn--primary btn--block" id="againBtn">Play again</button>
+        </div>
+        <p class="faint" id="scoresPHint">Waiting for host…</p>
+      </div>
+    </section>
+
+    <!-- ================= ERROR / KICKED ================= -->
+    <section class="screen play-center" id="scrEnd">
+      <div class="mid">
+        <h2 class="display" id="endTitle">Disconnected</h2>
+        <p class="muted" id="endNote">You left the room.</p>
+        <button class="btn btn--primary btn--lg" id="endRetry">Rejoin</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- libraries (CDN at runtime; the site itself stays static) -->
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <script src="util.js"></script>
+  <script src="store.js"></script>
+  <script src="audio.js"></script>
+  <script src="confetti.js"></script>
+  <script src="matching.js"></script>
+  <script src="avatar.js"></script>
+  <script src="drawpad.js"></script>
+  <script src="net.js"></script>
+  <script src="join.js"></script>
+</body>
+</html>
