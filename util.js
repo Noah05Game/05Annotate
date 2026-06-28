@@ -56,7 +56,7 @@
   const SETTINGS_KEY = '05ann.settings';
   const Settings = {
     _cache: null,
-    defaults: { theme: 'dark', sound: true, music: false, haptics: true, motion: true, perf: false },
+    defaults: { theme: 'dark', sound: true, music: true, haptics: true, motion: true, perf: false },
     get() {
       if (this._cache) return this._cache;
       try { this._cache = { ...this.defaults, ...JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}') }; }

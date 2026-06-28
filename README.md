@@ -14,6 +14,8 @@ realtime sync is peer-to-peer over **PeerJS**.
 1. **Main Screen** opens a room → shows a QR code + 6-character code.
 2. Players open `join.html`, enter the code, pick a name and **draw their own avatar**.
 3. First player in becomes **host** (👑) and gets a control panel on their phone.
+   Only the host sees these controls. On the **Main Screen** itself you can also
+   hover/click any player card and hit **✕** to remove someone (with a confirm).
 4. Each round:
    - **Draw** — everyone gets a different secret prompt and draws it against a timer.
    - **Guess** — one drawing at a time is revealed cinematically; everyone else types a guess.

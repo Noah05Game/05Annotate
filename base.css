@@ -332,3 +332,11 @@ a { color: var(--brand-2); text-decoration: none; }
 }
 :root[data-perf="on"] .bg__blob { filter: blur(30px); animation: none; }
 :root[data-perf="on"] .particles { display: none; }
+
+/* ----------------------------------------------------------------------------
+   Robust hidden: the `hidden` HTML attribute must always win over component
+   `display` rules (.sheet, .hostpanel, .result-badge, .netpill, etc. all set
+   display, which silently overrode the UA [hidden] rule). This one line keeps
+   every `hidden` toggle in the app honest.
+   ------------------------------------------------------------------------- */
+[hidden] { display: none !important; }

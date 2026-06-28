@@ -135,6 +135,45 @@
 .player-card__ready.waiting { background: var(--glass); color: var(--text-faint); border-color: var(--line); }
 .player-card.disc { opacity: .45; filter: grayscale(.6); }
 
+/* click-to-kick affordance (Main Screen only) */
+.player-card__kick {
+  position: absolute; top: 6px; right: 6px; z-index: 3;
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 1px solid var(--glass-border); background: var(--glass-2);
+  color: var(--text-dim); font-size: .8rem; line-height: 1; cursor: pointer;
+  display: grid; place-items: center; opacity: 0; transform: scale(.8);
+  transition: opacity .16s var(--ease), transform .16s var(--ease), background .16s, color .16s;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.player-card:hover .player-card__kick,
+.player-card:focus-within .player-card__kick { opacity: 1; transform: scale(1); }
+.player-card__kick:hover { background: #ff4d4f; border-color: #ff4d4f; color: #fff; transform: scale(1.12); }
+.player-card.confirming .player-card__kick { opacity: 0; pointer-events: none; }
+
+.player-card__confirm {
+  position: absolute; inset: 0; z-index: 4; border-radius: var(--r);
+  background: linear-gradient(160deg, rgba(30,8,12,.86), rgba(20,6,10,.92));
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,77,79,.5);
+  display: none; flex-direction: column; align-items: center; justify-content: center; gap: .7rem;
+  padding: .6rem; text-align: center;
+  animation: confirmIn .18s var(--spring) both;
+}
+.player-card.confirming .player-card__confirm { display: flex; }
+@keyframes confirmIn { from { opacity: 0; transform: scale(.92); } }
+.player-card__confirm-q { font-size: .9rem; color: var(--text); line-height: 1.25; }
+.player-card__confirm-q strong { font-family: var(--font-round); font-weight: 800; }
+.player-card__confirm-row { display: flex; gap: .4rem; }
+.pc-btn {
+  border: 1px solid var(--glass-border); background: var(--glass-2); color: var(--text);
+  border-radius: 999px; padding: .34rem .7rem; font-size: .78rem; font-weight: 700; cursor: pointer;
+  transition: transform .12s var(--ease), background .12s, border-color .12s;
+}
+.pc-btn:active { transform: scale(.94); }
+.pc-btn--yes { background: #ff4d4f; border-color: #ff4d4f; color: #fff; }
+.pc-btn--yes:hover { background: #ff6365; }
+.pc-btn--no:hover { background: var(--glass); }
+
 .lobby__empty { margin-top: 1.2rem; }
 
 /* ===================== DRAW PHASE ==================================== */

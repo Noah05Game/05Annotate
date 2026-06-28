@@ -505,15 +505,59 @@
     const roster = $('#roster');
     roster.innerHTML = '';
     players.forEach((p, i) => {
-      const card = el('div', { class: `player-card${p.connected ? '' : ' disc'}`, style: { animationDelay: (i * 50) + 'ms' } },
+      const kickBtn = el('button', {
+        class: 'player-card__kick', title: `Remove ${p.name}`, 'aria-label': `Remove ${p.name}`,
+        text: '✕',
+        onclick: e => { e.stopPropagation(); armKick(card); },
+      });
+      const confirm = el('div', { class: 'player-card__confirm' },
+        el('span', { class: 'player-card__confirm-q', html: 'Remove<br><strong></strong>?' }));
+      confirm.querySelector('strong').textContent = p.name;
+      confirm.append(
+        el('div', { class: 'player-card__confirm-row' },
+          el('button', { class: 'pc-btn pc-btn--no', text: 'Cancel',
+            onclick: e => { e.stopPropagation(); disarmKick(card); } }),
+          el('button', { class: 'pc-btn pc-btn--yes', text: 'Remove',
+            onclick: e => { e.stopPropagation(); doKick(p); } })));
+
+      const card = el('div', {
+          class: `player-card${p.connected ? '' : ' disc'}`,
+          style: { animationDelay: (i * 50) + 'ms' },
+        },
         p.host ? el('span', { class: 'player-card__crown', text: '👑' }) : null,
+        kickBtn,
         el('img', { class: 'player-card__av', src: p.avatar || '', alt: '' }),
         el('span', { class: 'player-card__name', text: p.name }),
-        el('span', { class: `player-card__ready ${p.ready ? '' : 'waiting'}`, text: p.ready ? 'Ready' : 'Joined' }));
+        el('span', { class: `player-card__ready ${p.ready ? '' : 'waiting'}`, text: p.ready ? 'Ready' : 'Joined' }),
+        confirm);
       roster.append(card);
     });
     $('#hostWaiting').textContent = players.length
-      ? 'Host starts when everyone’s in' : 'Waiting for players…';
+      ? 'Click a player’s ✕ to remove them · host starts the game' : 'Waiting for players…';
+  }
+
+  // arm/disarm the inline "Remove?" confirmation on a lobby card
+  let armedCard = null;
+  function armKick(card) {
+    if (armedCard && armedCard !== card) disarmKick(armedCard);
+    card.classList.add('confirming');
+    armedCard = card;
+    Sound.tap();
+    clearTimeout(armKick._t);
+    armKick._t = setTimeout(() => disarmKick(card), 4000); // auto-cancel
+  }
+  function disarmKick(card) {
+    if (!card) return;
+    card.classList.remove('confirming');
+    if (armedCard === card) armedCard = null;
+  }
+  function doKick(p) {
+    armedCard = null;
+    const card = $('#roster') && $('#roster').querySelector('.player-card.confirming');
+    if (card) card.classList.add('leaving');
+    Sound.leave();
+    toast(`Removed ${p.name}`, '');
+    setTimeout(() => kickPlayer(p.pid), 180);
   }
 
   function renderDrawAvatars() {

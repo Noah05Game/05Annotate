@@ -182,6 +182,7 @@
   function onLobby(m) {
     S.started = m.started;
     S.isHost = (m.host === S.pid);
+    S.connectedCount = m.players.filter(p => p.connected).length;
     if (m.settings) { S.settings = m.settings; reflectSettings(); }
     $('#meRole').textContent = S.isHost ? '👑 You’re the host' : 'You’re in';
     $('#hostPanel').hidden = !S.isHost;
@@ -381,7 +382,12 @@
     client.send({ t: 'ready', value: e.target.checked });
     Sound.tap(); haptic(10);
   });
-  $('#startBtn').addEventListener('click', () => { client.send({ t: 'host:start' }); Sound.start(); haptic(18); });
+  $('#startBtn').addEventListener('click', () => {
+    if ((S.connectedCount || 0) < 2) {
+      toast('Need at least 2 players to start', 'bad'); haptic(20); return;
+    }
+    client.send({ t: 'host:start' }); Sound.start(); haptic(18);
+  });
 
   function bindSeg(segId, key) {
     const seg = $('#' + segId);
